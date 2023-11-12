@@ -1,0 +1,37 @@
+gcloud compute disks create nested-vm-disk --type=pd-standard --zone=us-west1-b --image-family=ubuntu-2004-lts --image-project=ubuntu-os-cloud
+
+gcloud compute images create nested-ubuntu-2004 --source-disk nested-vm-disk --source-disk-zone us-west1-b --licenses "https://www.googleapis.com/compute/v1/projects/vm-options/global/licenses/enable-vmx"
+
+gcloud compute disks delete nested-vm-disk
+
+gcloud compute instances create my-test-vm-5 --zone us-west1-b --min-cpu-platform "Intel Cascade Lake" --image nested-ubuntu-2004 --machine-type=n2-standard-2 --boot-disk-size=30GB --boot-disk-type=pd-standard
+
+sudo apt install qemu-kvm -y
+
+kvm-ok
+
+
+========
+
+$ sudo add-apt-repository -y cloud-archive:queens
+$ sudo apt update
+
+sudo apt install -y virt-manager qemu-efi
+
+virsh list --all
+
+virsh --connect qemu:///system start my-vm
+
+virsh console my-vm
+
+exit: Ctrl+5
+
+OS info: cat /etc/os-release
+
+virsh destroy my-vm
+
+
+echo "http://mirror.leaseweb.com/alpine/latest-stable/main" > /etc/apk/repositories
+#/media/cdrom/apks
+http://dl-cdn.alpinelinux.org/alpine/v3.18/main
+http://dl-cdn.alpinelinux.org/alpine/v3.18/community

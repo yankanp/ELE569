@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create VM</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 20px;
+        }
+
+        .column {
+            width: 50%;
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0074D9;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #cce5ff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .button-container button {
+            background-color: #3498db; /* Button color for "Show All VMs" */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create a VM</h1>
+    <div class="column">
+        <form method="POST">
+            <label for="VM_NAME">VM Name:</label>
+            <input type="text" name="VM_NAME" required><br>
+
+            <label for="VM_MEMORY">VM Memory (e.g., 2048):</label>
+            <input type="text" name="VM_MEMORY" required><br>
+
+            <label for="VM_DISK_SIZE">VM Disk Size (e.g., 1G):</label>
+            <input type="text" name="VM_DISK_SIZE" required><br>
+
+            <label for="VM_CPU_CORES">VM CPU Cores (e.g., 1):</label>
+            <input type="text" name="VM_CPU_CORES" required><br>
+
+            <button type="submit" class="create-vm-button">Create VM</button>
+        </form>
+
+        <div class="button-container">
+            <form method="GET">
+                <button type="submit" name="show_vms">Show All VMs</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="column">
+        <table>
+            <tr>
+                <th>VM Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for vm in vm_list %}
+                <tr>
+                    <td>{{ vm.name }}</td>
+                    <td>{{ vm.status }}</td>
+                    <td>
+                        <form method="POST" action="/delete_vm/{{ vm.name }}">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+

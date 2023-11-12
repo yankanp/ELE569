@@ -1,0 +1,12 @@
+sudo su
+apt update
+grep -cw vmx /proc/cpuinfo
+sudo apt-get update && sudo apt-get install qemu-kvm -y
+sudo setfacl -m u:${USER}:rw /dev/kvm
+[ -r /dev/kvm ] && [ -w /dev/kvm ] && echo "OK" || echo "FAIL"
+
+curl -fsSL -o ./firecracker https://github.com/firecracker-microvm/firecracker/releases/download/v0.11.0/firecracker-v0.11.0
+chmod +x ./firecracker
+curl -fsSL -o ./hello-vmlinux.bin https://s3.amazonaws.com/spec.ccfc.min/img/hello/kernel/hello-vmlinux.bin
+curl -fsSL -o ./hello-rootfs.ext4 https://s3.amazonaws.com/spec.ccfc.min/img/hello/fsfiles/hello-rootfs.ext4
+rm -f /tmp/firecracker.sock && ./firecracker --api-sock /tmp/firecracker.sock
