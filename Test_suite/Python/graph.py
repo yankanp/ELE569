@@ -1,7 +1,7 @@
 import time
 import heapq
 import random
-from memory_profiler import memory_usage
+import resource
 
 def generate_large_graph(num_nodes, edge_probability, max_weight=10):
     graph = {i: {} for i in range(num_nodes)}
@@ -33,8 +33,15 @@ def dijkstra(graph, start):
 
     return distances
 
+def get_memory_usage():
+    # Get the current memory usage in kilobytes
+    memory_kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    # Convert kilobytes to megabytes
+    memory_mb = memory_kb / 1024.0
+    return memory_mb
+
 def main():
-    num_nodes = 10000  # Number of nodes in the graph
+    num_nodes = 3000  # Number of nodes in the graph
     edge_probability = 0.5  # Probability of an edge between two nodes
 
     graph = generate_large_graph(num_nodes, edge_probability)
@@ -47,5 +54,10 @@ def main():
     print(f"Execution Time: {end_time - start_time} seconds")
 
 if __name__ == "__main__":
-    mem_usage = memory_usage(proc=main, interval=1, timeout=1)
-    print(f"Peak Memory Usage: {max(mem_usage)} MiB")
+    before_memory = get_memory_usage()
+    main()
+    after_memory = get_memory_usage()
+
+    # Calculate peak memory usage during the execution
+    peak_memory = max(before_memory, after_memory)
+    print(f"Peak Memory Usage: {peak_memory} MiB")
